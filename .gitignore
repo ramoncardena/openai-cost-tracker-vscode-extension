@@ -1,0 +1,25 @@
+# Defaults for VS Code extension projects
+.vscode/*
+!.vscode/launch.json
+!.vscode/extensions.json
+!.vscode/tasks.json
+
+# Build output
+out/
+dist/
+*.vsix
+
+# Dependencies
+node_modules/
+
+# Logs
+npm-debug.log
+yarn-error.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Test coverage
+coverage/
+.nyc_output/
