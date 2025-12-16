@@ -3,6 +3,7 @@ import { ServiceContainer } from './services/serviceContainer';
 import { SecretStorageService } from './services/secretStorageService';
 import { ISecretStorageService, ICostTrackerService } from './services/types';
 import { CostTrackerService } from './services/costTrackerService';
+import { CostStatusBarItem } from './ui/statusBarItem';
 
 /**
  * Activation entry point for the extension.
@@ -19,6 +20,10 @@ export async function activate(context: vscode.ExtensionContext) {
 
   const costTrackerService = new CostTrackerService(); // Constructor gets dependencies from container
   serviceContainer.register(ICostTrackerService, costTrackerService);
+
+  // Initialize UI
+  const statusBarItem = new CostStatusBarItem();
+  await statusBarItem.init();
 
   // Register Commands
   let helloWorld = vscode.commands.registerCommand('openai-cost-tracker.helloWorld', () => {
@@ -48,7 +53,7 @@ export async function activate(context: vscode.ExtensionContext) {
     }
   });
 
-  context.subscriptions.push(helloWorld, setApiKey, showCost);
+  context.subscriptions.push(helloWorld, setApiKey, showCost, statusBarItem);
 }
 
 /**

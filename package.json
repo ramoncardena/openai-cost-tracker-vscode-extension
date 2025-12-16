@@ -31,7 +31,18 @@
         "title": "Show Current Month Cost",
         "category": "OpenAI Cost Tracker"
       }
-    ]
+    ],
+    "configuration": {
+      "title": "OpenAI Cost Tracker",
+      "properties": {
+        "openaiCostTracker.refreshInterval": {
+          "type": "number",
+          "default": 60,
+          "description": "Interval in minutes to refresh the cost data.",
+          "minimum": 5
+        }
+      }
+    }
   },
   "scripts": {
     "vscode:prepublish": "npm run package",
