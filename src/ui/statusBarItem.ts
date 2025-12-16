@@ -10,6 +10,7 @@ export class CostStatusBarItem {
   private statusBarItem: vscode.StatusBarItem;
   private costTracker: ICostTrackerService;
   private refreshInterval: NodeJS.Timeout | undefined;
+  private displayMode: 'Today' | 'Month' = 'Today';
 
   constructor() {
     this.statusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 100);
@@ -23,6 +24,7 @@ export class CostStatusBarItem {
   public async init(): Promise<void> {
     this.statusBarItem.show();
     this.statusBarItem.text = '$(sync~spin) Loading Cost...';
+    this.statusBarItem.command = 'openai-cost-tracker.showCost';
     
     await this.updateCost();
 
@@ -35,9 +37,6 @@ export class CostStatusBarItem {
         this.setupTimer();
       }
     });
-
-    // Listen for API key changes (if we had that event exposed nicely, strictly speaking we should subscribe to secretStorageService.onDidChangeApiKey)
-    // For now, simple polling covers most cases.
   }
 
   private setupTimer() {
@@ -57,12 +56,48 @@ export class CostStatusBarItem {
   public async updateCost(): Promise<void> {
     try {
       this.statusBarItem.text = '$(sync~spin) Checking...';
-      const cost = await this.costTracker.getCurrentMonthCost();
-      this.statusBarItem.text = `$(sparkle) $${cost.toFixed(2)}`;
-      this.statusBarItem.tooltip = `Current Month Cost (OpenAI)`;
+      
+      const now = new Date();
+      let startTime = 0;
+      let endTime = 0;
+
+      if (this.displayMode === 'Today') {
+        const startObj = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+        const endObj = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
+        startTime = Math.floor(startObj.getTime() / 1000);
+        endTime = Math.floor(endObj.getTime() / 1000);
+      } else {
+        const startObj = new Date(now.getFullYear(), now.getMonth(), 1);
+        const endObj = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
+        startTime = Math.floor(startObj.getTime() / 1000);
+        endTime = Math.floor(endObj.getTime() / 1000);
+      }
+
+      const cost = await this.costTracker.getCost(startTime, endTime);
+      const label = this.displayMode === 'Today' ? 'Today' : 'Month';
+      this.statusBarItem.text = `$(sparkle) ${label}: $${cost.toFixed(2)}`;
+      this.statusBarItem.tooltip = `Click to switch view (Current: ${this.displayMode})`;
     } catch (error) {
       this.statusBarItem.text = '$(error) Cost Info';
       this.statusBarItem.tooltip = 'Error fetching cost. Click to retry/see details.';
+    }
+  }
+
+  public async showMenu(): Promise<void> {
+    const pick = await vscode.window.showQuickPick(
+      [
+        { label: 'Switch to Today', description: 'Show cost for the current day', mode: 'Today' },
+        { label: 'Switch to Month', description: 'Show cost for the current month', mode: 'Month' },
+        { label: 'Refresh', description: 'Force update cost' }
+      ],
+      { placeHolder: 'Select Cost View Mode' }
+    );
+
+    if (pick) {
+      if ((pick as any).mode) {
+        this.displayMode = (pick as any).mode;
+      }
+      this.updateCost();
     }
   }
 

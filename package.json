@@ -3,6 +3,7 @@
   "displayName": "OpenAI Cost Tracker",
   "description": "Track usage and cost of OpenAI API calls within VS Code.",
   "version": "0.0.1",
+  "publisher": "ramoncardena",
   "author": {
     "name": "Ramon Cardena",
     "url": "https://github.com/ramoncardena"

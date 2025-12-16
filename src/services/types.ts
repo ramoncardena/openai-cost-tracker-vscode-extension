@@ -57,8 +57,9 @@ export const ICostTrackerService = 'ICostTrackerService';
  */
 export interface ICostTrackerService extends IService {
   /**
-   * Gets the total cost for the current month.
-   * @returns The total cost in USD.
+   * Fetches the cost for a specific time range.
+   * @param startTime Unix timestamp in seconds (inclusive)
+   * @param endTime Unix timestamp in seconds (exclusive)
    */
-  getCurrentMonthCost(): Promise<number>;
+  getCost(startTime: number, endTime: number): Promise<number>;
 }

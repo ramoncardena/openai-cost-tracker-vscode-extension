@@ -4,9 +4,8 @@ Track your OpenAI API usage and costs directly within Visual Studio Code. This e
 
 ## Features
 
-- **Real-time Cost Tracking**: View your current OpenAI API usage cost in the Status Bar.
-- **Detailed Usage View**: Analyze usage by model, date, or endpoint (Coming Soon).
-- **Budget Alerts**: Set thresholds to get notified when you're approaching your budget limit (Coming Soon).
+- **Real-time Cost Tracking**: View your current month's usage cost in the Status Bar (updates hourly).
+- **Click for Details**: Click the status bar item to view the exact amount and debug options.
 - **Secure Key Storage**: Your API keys are stored securely using VS Code's native SecretStorage.
 
 ## Requirements
@@ -18,18 +17,21 @@ Track your OpenAI API usage and costs directly within Visual Studio Code. This e
 
 This extension contributes the following settings:
 
-- `openaiCostTracker.apiKey`: Set your OpenAI API Key (Recommend using the command `OpenAI Cost Tracker: Set API Key` for security).
-- `openaiCostTracker.refreshInterval`: Frequency to fetch usage data (default: 5 minutes).
+- `openaiCostTracker.refreshInterval`: Frequency in minutes to refresh the cost data from OpenAI (default: 60 minutes).
 
 ## Known Issues
 
-- Initial release is in development. Basic tracking only.
+- The extension currently tracks the total cost for the _current calendar month_.
+- "Detailed Usage" breakdown is in development.
 
 ## Release Notes
 
 ### 0.0.1
 
-- Initial scaffolding and project setup.
+- Initial release.
+- Secure API Key management.
+- Status Bar integration with `$(sparkle)` icon.
+- Monthly cost tracking.
 
 ---
 

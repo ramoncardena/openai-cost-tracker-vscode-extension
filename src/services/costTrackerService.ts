@@ -37,22 +37,15 @@ export class CostTrackerService implements ICostTrackerService {
   dispose(): void {}
 
   /**
-   * Fetches the cost for the current month.
+   * Fetches the cost for a specific time range.
+   * @param startTime Unix timestamp in seconds
+   * @param endTime Unix timestamp in seconds
    */
-  async getCurrentMonthCost(): Promise<number> {
+  async getCost(startTime: number, endTime: number): Promise<number> {
     const apiKey = await this.secretStorage.getKey();
     if (!apiKey) {
       throw new Error('API Key not found. Please set your OpenAI API Key first.');
     }
-
-    const now = new Date();
-    // Start of current month
-    const startObj = new Date(now.getFullYear(), now.getMonth(), 1);
-    const endObj = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
-
-    // Costs API expects Unix timestamp in seconds
-    const startTime = Math.floor(startObj.getTime() / 1000);
-    const endTime = Math.floor(endObj.getTime() / 1000);
     
     // Using fetch (available in Node 18+ / VS Code)
     const url = `https://api.openai.com/v1/organization/costs?start_time=${startTime}&end_time=${endTime}&limit=100`;

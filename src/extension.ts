@@ -32,25 +32,23 @@ export async function activate(context: vscode.ExtensionContext) {
 
   let setApiKey = vscode.commands.registerCommand('openai-cost-tracker.setApiKey', async () => {
     const key = await vscode.window.showInputBox({
-      title: 'OpenAI API Key',
-      prompt: 'Enter your OpenAI API Key to track costs (Must be an Admin Key)',
-      ignoreFocusOut: true,
-      password: true
+      title: 'Set OpenAI API Key',
+      prompt: 'Enter your OpenAI API Key (User API Key required)',
+      password: true,
+      ignoreFocusOut: true
     });
 
     if (key) {
       await secretStorageService.storeKey(key);
-      vscode.window.showInformationMessage('API Key saved securely.');
+      vscode.window.showInformationMessage('API Key updated successfully.');
+      statusBarItem.updateCost(); // Refresh cost
     }
   });
 
   let showCost = vscode.commands.registerCommand('openai-cost-tracker.showCost', async () => {
-    try {
-      const cost = await costTrackerService.getCurrentMonthCost();
-      vscode.window.showInformationMessage(`Current Month Cost: $${cost.toFixed(2)}`);
-    } catch (error: any) {
-      vscode.window.showErrorMessage(error.message);
-    }
+    // Determine if trigger came from status bar or palette
+    // For now, let's just open the menu which includes refresh
+    await statusBarItem.showMenu();
   });
 
   context.subscriptions.push(helloWorld, setApiKey, showCost, statusBarItem);
