@@ -20,6 +20,11 @@
       {
         "command": "openai-cost-tracker.helloWorld",
         "title": "Hello World"
+      },
+      {
+        "command": "openai-cost-tracker.setApiKey",
+        "title": "Set API Key",
+        "category": "OpenAI Cost Tracker"
       }
     ]
   },
