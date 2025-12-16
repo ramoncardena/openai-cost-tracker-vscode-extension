@@ -12,7 +12,7 @@ Track your OpenAI API usage and costs directly within Visual Studio Code. This e
 ## Requirements
 
 - visual Studio Code v1.85.0 or higher.
-- An active OpenAI API Key.
+- An active OpenAI **User API Key (Legacy)** with Admin permissions (Project keys may not work for cost tracking).
 
 ## Extension Settings
 

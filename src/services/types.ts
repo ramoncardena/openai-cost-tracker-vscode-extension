@@ -46,3 +46,19 @@ export interface ISecretStorageService extends IService {
    */
   onDidChangeApiKey: vscode.Event<void>;
 }
+
+/**
+ * Service Identifier for the CostTrackerService.
+ */
+export const ICostTrackerService = 'ICostTrackerService';
+
+/**
+ * Service to track OpenAI API usage and costs.
+ */
+export interface ICostTrackerService extends IService {
+  /**
+   * Gets the total cost for the current month.
+   * @returns The total cost in USD.
+   */
+  getCurrentMonthCost(): Promise<number>;
+}

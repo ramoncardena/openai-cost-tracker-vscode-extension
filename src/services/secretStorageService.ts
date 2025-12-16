@@ -28,7 +28,7 @@ export class SecretStorageService implements ISecretStorageService {
    * Securely stores the API key.
    */
   async storeKey(key: string): Promise<void> {
-    await this.context.secrets.store(SecretStorageService.KEY_NAME, key);
+    await this.context.secrets.store(SecretStorageService.KEY_NAME, key.trim());
   }
 
   /**

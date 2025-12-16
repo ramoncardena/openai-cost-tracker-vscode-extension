@@ -25,6 +25,11 @@
         "command": "openai-cost-tracker.setApiKey",
         "title": "Set API Key",
         "category": "OpenAI Cost Tracker"
+      },
+      {
+        "command": "openai-cost-tracker.showCost",
+        "title": "Show Current Month Cost",
+        "category": "OpenAI Cost Tracker"
       }
     ]
   },
