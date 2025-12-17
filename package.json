@@ -8,7 +8,12 @@
   "author": {
     "name": "Ramon Cardena",
     "url": "https://github.com/ramoncardena"
-    },
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ramoncardena/openai-cost-tracker-vscode-extension.git"
+  },
+  "license": "MIT",
   "engines": {
     "vscode": "^1.85.0"
   },
