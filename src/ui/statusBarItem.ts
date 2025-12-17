@@ -1,7 +1,6 @@
 import * as vscode from 'vscode';
-import { ICostTrackerService } from '../services/types';
 import { ServiceContainer } from '../services/serviceContainer';
-import { ICostTrackerService as ICostTrackerServiceId } from '../services/types';
+import { ICostTrackerService, ICostTrackerServiceId } from '../services/types';
 
 /**
  * Manages the Status Bar Item for displaying OpenAI costs.
@@ -88,6 +87,7 @@ export class CostStatusBarItem {
       [
         { label: 'Switch to Today', description: 'Show cost for the current day', mode: 'Today' },
         { label: 'Switch to Month', description: 'Show cost for the current month', mode: 'Month' },
+        { label: 'View Detailed Stats', description: 'Open charts breakdown' },
         { label: 'Refresh', description: 'Force update cost' }
       ],
       { placeHolder: 'Select Cost View Mode' }
@@ -96,8 +96,12 @@ export class CostStatusBarItem {
     if (pick) {
       if ((pick as any).mode) {
         this.displayMode = (pick as any).mode;
+        this.updateCost();
+      } else if (pick.label === 'View Detailed Stats') {
+        vscode.commands.executeCommand('openai-cost-tracker.showDetailedStats');
+      } else {
+        this.updateCost();
       }
-      this.updateCost();
     }
   }
 

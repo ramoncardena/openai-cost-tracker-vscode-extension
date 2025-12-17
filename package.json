@@ -4,6 +4,7 @@
   "description": "Track usage and cost of OpenAI API calls within VS Code.",
   "version": "0.0.1",
   "publisher": "ramoncardena",
+  "icon": "images/icon.png",
   "author": {
     "name": "Ramon Cardena",
     "url": "https://github.com/ramoncardena"
@@ -14,14 +15,12 @@
   "categories": [
     "Other"
   ],
-  "activationEvents": [],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
   "main": "./dist/extension.js",
   "contributes": {
     "commands": [
-      {
-        "command": "openai-cost-tracker.helloWorld",
-        "title": "Hello World"
-      },
       {
         "command": "openai-cost-tracker.setApiKey",
         "title": "Set API Key",

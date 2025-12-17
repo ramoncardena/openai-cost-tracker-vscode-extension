@@ -1,6 +1,4 @@
-import { ICostTrackerService, ISecretStorageService } from './types';
-import { ServiceContainer } from './serviceContainer';
-import { ISecretStorageService as ISecretStorageServiceId } from './types';
+import { ICostTrackerService, ISecretStorageService, DailyCost } from './types';
 
 interface CostResult {
   object: string;
@@ -28,8 +26,8 @@ interface CostsResponse {
 export class CostTrackerService implements ICostTrackerService {
   private secretStorage: ISecretStorageService;
 
-  constructor() {
-    this.secretStorage = ServiceContainer.getInstance().get<ISecretStorageService>(ISecretStorageServiceId);
+  constructor(secretStorage: ISecretStorageService) {
+    this.secretStorage = secretStorage;
   }
 
   async init(): Promise<void> {}
@@ -88,5 +86,54 @@ export class CostTrackerService implements ICostTrackerService {
     }
 
     return totalCost;
+  }
+
+  /**
+   * Fetches daily cost breakdown.
+   */
+  async getDailyCosts(startTime: number, endTime: number): Promise<DailyCost[]> {
+    const apiKey = await this.secretStorage.getKey();
+    if (!apiKey) {
+      throw new Error('API Key not found.');
+    }
+
+    const url = `https://api.openai.com/v1/organization/costs?start_time=${startTime}&end_time=${endTime}&limit=100`;
+
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${apiKey.trim()}`,
+        'Content-Type': 'application/json'
+      }
+    });
+
+    if (!response.ok) {
+        throw new Error(`Failed to fetch costs: ${response.status} ${await response.text()}`);
+    }
+
+    const data = await response.json() as CostsResponse;
+    const dailyCosts: DailyCost[] = [];
+
+    if (data.data && Array.isArray(data.data)) {
+      for (const bucket of data.data) {
+        // Calculate total for this bucket (day)
+        let dayCost = 0;
+        if (bucket.results && Array.isArray(bucket.results)) {
+          for (const result of bucket.results) {
+             const val = Number(result.amount.value);
+             if (!isNaN(val)) {
+               dayCost += val;
+             }
+          }
+        }
+        
+        // Convert timestamp to readable date (e.g., "YYYY-MM-DD")
+        // Use bucket.start_time which is in seconds
+        const date = new Date(bucket.start_time * 1000).toISOString().split('T')[0];
+        dailyCosts.push({ date, amount: dayCost });
+      }
+    }
+
+    return dailyCosts;
   }
 }

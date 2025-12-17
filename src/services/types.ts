@@ -18,7 +18,7 @@ export interface IService {
 /**
  * Service Identifier for the SecretStorageService.
  */
-export const ISecretStorageService = 'ISecretStorageService';
+export const ISecretStorageServiceId = 'ISecretStorageService';
 
 /**
  * Interface for securely storing and retrieving sensitive information like API Keys.
@@ -50,11 +50,16 @@ export interface ISecretStorageService extends IService {
 /**
  * Service Identifier for the CostTrackerService.
  */
-export const ICostTrackerService = 'ICostTrackerService';
+export const ICostTrackerServiceId = 'ICostTrackerService';
 
 /**
  * Service to track OpenAI API usage and costs.
  */
+export interface DailyCost {
+  date: string; // ISO date string or formatted date
+  amount: number;
+}
+
 export interface ICostTrackerService extends IService {
   /**
    * Fetches the cost for a specific time range.
@@ -62,4 +67,11 @@ export interface ICostTrackerService extends IService {
    * @param endTime Unix timestamp in seconds (exclusive)
    */
   getCost(startTime: number, endTime: number): Promise<number>;
+
+  /**
+   * Fetches daily cost breakdown for a time range.
+   * @param startTime Unix timestamp in seconds
+   * @param endTime Unix timestamp in seconds
+   */
+  getDailyCosts(startTime: number, endTime: number): Promise<DailyCost[]>;
 }
