@@ -2,7 +2,7 @@
   "name": "openai-cost-tracker",
   "displayName": "OpenAI Cost Tracker",
   "description": "Track usage and cost of OpenAI API calls within VS Code.",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "publisher": "ramoncardena",
   "icon": "images/icon.png",
   "author": {
